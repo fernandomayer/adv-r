@@ -1,3 +1,8 @@
+## change dir up - to be in adv-r/
+getwd()
+setwd("../")
+getwd()
+
 library(bookdown)
 library(rmarkdown)
 
@@ -58,12 +63,25 @@ apply_regexps(c(
   "\\begin{ENDSIDEBAR}\\end{ENDSIDEBAR}" = "\\end{shortbox}"
 ))
 
+##----------------------------------------------------------------------
+## To insert a cover page with the book cover:
+# enter book/advaned-r.tex and insert this code just below
+# \begin{document}
+# \begin{titlepage}
+#     \centering
+#     \begin{figure}[p]
+#     \includegraphics[width=1.1\textwidth]{cover.png}
+#   \end{figure}
+# \end{titlepage}
+##----------------------------------------------------------------------
+
 # Copy across additional files -------------------------------------------------
 file.copy("book/advanced-r.tex", "book/tex/", recursive = TRUE)
 file.copy("book/krantz.cls", "book/tex/", recursive = TRUE)
 file.copy("diagrams/", "book/tex/", recursive = TRUE)
 file.copy("screenshots/", "book/tex/", recursive = TRUE)
 file.copy("figures", "book/tex/", recursive = TRUE)
+file.copy("cover.png", "book/tex/", recursive = TRUE)
 
 # Build tex file ---------------------------------------------------------------
 # (build with Rstudio to find/diagnose errors)
@@ -75,5 +93,5 @@ system("xelatex -interaction=batchmode advanced-r ")
 system("xelatex -interaction=batchmode advanced-r ")
 setwd(old)
 
-file.copy("book/tex/advanced-r.pdf", "book/advanced-r.pdf", overwrite = TRUE)
 embedFonts("book/tex/advanced-r.pdf")
+file.copy("book/tex/advanced-r.pdf", "book/advanced-r.pdf", overwrite = TRUE)

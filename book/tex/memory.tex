@@ -44,6 +44,7 @@ already have them, run this code to get the packages you need:
 \begin{Highlighting}[]
 \KeywordTok{install.packages}\NormalTok{(}\StringTok{"ggplot2"}\NormalTok{)}
 \KeywordTok{install.packages}\NormalTok{(}\StringTok{"pryr"}\NormalTok{)}
+\KeywordTok{install.packages}\NormalTok{(}\StringTok{"devtools"}\NormalTok{)}
 \NormalTok{devtools::}\KeywordTok{install_github}\NormalTok{(}\StringTok{"hadley/lineprof"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
@@ -300,7 +301,7 @@ memory: \indexc{mem\_used()}
 \begin{Highlighting}[]
 \KeywordTok{library}\NormalTok{(pryr)}
 \KeywordTok{mem_used}\NormalTok{()}
-\CommentTok{#> 47.5 MB}
+\CommentTok{#> 46.9 MB}
 \end{Highlighting}
 \end{Shaded}
 
@@ -343,9 +344,9 @@ anything on the order of around 2 kB.
 \begin{Shaded}
 \begin{Highlighting}[]
 \KeywordTok{mem_change}\NormalTok{(}\OtherTok{NULL}\NormalTok{)}
-\CommentTok{#> 1.47 kB}
+\CommentTok{#> 1.23 kB}
 \KeywordTok{mem_change}\NormalTok{(}\OtherTok{NULL}\NormalTok{)}
-\CommentTok{#> 1.47 kB}
+\CommentTok{#> 1.23 kB}
 \end{Highlighting}
 \end{Shaded}
 
@@ -363,10 +364,10 @@ deletes that object. \index{garbage collection}
 \CommentTok{#> 4 MB}
 \CommentTok{# Also point to 1:1e6 from y}
 \KeywordTok{mem_change}\NormalTok{(y <-}\StringTok{ }\NormalTok{x)}
-\CommentTok{#> 1.53 kB}
+\CommentTok{#> 1.29 kB}
 \CommentTok{# Remove x, no memory freed because y is still pointing to it}
 \KeywordTok{mem_change}\NormalTok{(}\KeywordTok{rm}\NormalTok{(x))}
-\CommentTok{#> 1.42 kB}
+\CommentTok{#> 1.18 kB}
 \CommentTok{# Now nothing points to it and the memory can be freed}
 \KeywordTok{mem_change}\NormalTok{(}\KeywordTok{rm}\NormalTok{(y))}
 \CommentTok{#> -4 MB}
@@ -399,7 +400,7 @@ the function completes. \index{memory!leaks}
   \DecValTok{10}
 \NormalTok{\}}
 \KeywordTok{mem_change}\NormalTok{(x <-}\StringTok{ }\KeywordTok{f1}\NormalTok{())}
-\CommentTok{#> 1.38 kB}
+\CommentTok{#> 1.19 kB}
 \KeywordTok{object_size}\NormalTok{(x)}
 \CommentTok{#> 48 B}
 
@@ -689,11 +690,11 @@ changes.
 \NormalTok{x <-}\StringTok{ }\DecValTok{1}\NormalTok{:}\DecValTok{10}
 \NormalTok{y <-}\StringTok{ }\NormalTok{x}
 \KeywordTok{c}\NormalTok{(}\KeywordTok{address}\NormalTok{(x), }\KeywordTok{address}\NormalTok{(y))}
-\CommentTok{#> [1] "0x7f8c15857420" "0x7f8c15857420"}
+\CommentTok{#> [1] "0x27b6048" "0x27b6048"}
 
 \NormalTok{x[}\DecValTok{5}\NormalTok{] <-}\StringTok{ }\NormalTok{6L}
 \KeywordTok{c}\NormalTok{(}\KeywordTok{address}\NormalTok{(x), }\KeywordTok{address}\NormalTok{(y))}
-\CommentTok{#> [1] "0x7f8c156b9f40" "0x7f8c15857420"}
+\CommentTok{#> [1] "0x1160ef0" "0x27b6048"}
 \end{Highlighting}
 \end{Shaded}
 
@@ -798,11 +799,11 @@ and \texttt{refs()} for a small sample of the loop:
   \NormalTok{x[, i] <-}\StringTok{ }\NormalTok{x[, i] -}\StringTok{ }\NormalTok{medians[i]}
   \KeywordTok{print}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\KeywordTok{address}\NormalTok{(x), }\KeywordTok{refs}\NormalTok{(x)))}
 \NormalTok{\}}
-\CommentTok{#> [1] "0x7f8c10637cf0" "2"             }
-\CommentTok{#> [1] "0x7f8c10641b60" "2"             }
-\CommentTok{#> [1] "0x7f8c1063f670" "2"             }
-\CommentTok{#> [1] "0x7f8c10640060" "2"             }
-\CommentTok{#> [1] "0x7f8c10640a50" "2"}
+\CommentTok{#> [1] "0x30c9bd0" "2"        }
+\CommentTok{#> [1] "0x33989b0" "2"        }
+\CommentTok{#> [1] "0x2f394d0" "2"        }
+\CommentTok{#> [1] "0x1dee150" "2"        }
+\CommentTok{#> [1] "0x30fd860" "2"}
 \end{Highlighting}
 \end{Shaded}
 
@@ -822,11 +823,11 @@ modifications occur in place:
   \NormalTok{y[[i]] <-}\StringTok{ }\NormalTok{y[[i]] -}\StringTok{ }\NormalTok{medians[i]}
   \KeywordTok{print}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\KeywordTok{address}\NormalTok{(y), }\KeywordTok{refs}\NormalTok{(y)))}
 \NormalTok{\}}
-\CommentTok{#> [1] "0x7f8c1040c3f0" "1"             }
-\CommentTok{#> [1] "0x7f8c1040c3f0" "1"             }
-\CommentTok{#> [1] "0x7f8c1040c3f0" "1"             }
-\CommentTok{#> [1] "0x7f8c1040c3f0" "1"             }
-\CommentTok{#> [1] "0x7f8c1040c3f0" "1"}
+\CommentTok{#> [1] "0x25ad9c0" "1"        }
+\CommentTok{#> [1] "0x25ad9c0" "1"        }
+\CommentTok{#> [1] "0x25ad9c0" "1"        }
+\CommentTok{#> [1] "0x25ad9c0" "1"        }
+\CommentTok{#> [1] "0x25ad9c0" "1"}
 \end{Highlighting}
 \end{Shaded}
 
